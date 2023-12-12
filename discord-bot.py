@@ -37,8 +37,8 @@ async def gpt(interaction: Interaction, prompt:str):
   embed = discord.Embed(title=prompt,description=ans,color=0xff0000) #16進数カラーコード
   await interaction.followup.send(f"{interaction.user.mention}", embed=embed)
 
-@tree.command(name="alldelete", description="channelの会話を全て削除")
-async def alldelete(interaction: Interaction):
+@tree.command(name="delete_all", description="channelの会話を全て削除")
+async def delete_all(interaction: Interaction):
   channel = interaction.channel
   await channel.purge()
 client.run(TOKEN)
