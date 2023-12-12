@@ -15,4 +15,4 @@ def question(prompt):
       {"role": "user", "content": prompt}
     ]
   )
-  return completion.choices[0].message
+  return completion.choices[0].message.content

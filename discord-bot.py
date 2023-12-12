@@ -1,11 +1,10 @@
 import discord
 from discord import Interaction
-import re
-from discord.ext import commands
 from discord.app_commands import CommandTree
 from GPT import question
 from dotenv import load_dotenv
 import os
+
 
 #.envファイルの読み込み
 load_dotenv()
@@ -24,34 +23,22 @@ async def on_ready():
   print("logged in")
   await tree.sync()
   
-#メッセージの送受信
-#@client.event
-#async def on_message(message: discord.Message):
-#  
-#  #openaiAPIを叩くためのコマンド(大文字小文字問わない)
-#  regex_pattern = r"/GPT (.+)"  
-#  regex_match = re.match(regex_pattern, message.content, re.IGNORECASE) 
-#  
-#  #送信者がbotの場合は無視
-#  if message.author.bot:
-#    return
-#  else:
-#    if message.content.startswith("/hello"):
-#      await message.channel.send("hello")
-#    if regex_match:
-#      print(message.content)
-#      prompt = re.split(r"/gpt", message.content, flags=re.IGNORECASE)[1:]
-#      ans = question(prompt)
-#      await message.channel.send(ans)
-
 @tree.command(name="hello", description="Helloを返す")
 async def hello(interaction: Interaction):
+  print("hello")
   await interaction.response.send_message(f'Hello, {interaction.user.mention}')
   
 @tree.command(name="gpt", description="ChatGPTが説明してくれる")
 async def gpt(interaction: Interaction, prompt:str):
+  await interaction.response.defer()
   print(prompt)
   ans = question(prompt)
-  await interaction.response.send_message(ans)
-  
+  print(ans)
+  embed = discord.Embed(title=prompt,description=ans,color=0xff0000) #16進数カラーコード
+  await interaction.followup.send(f"{interaction.user.mention}", embed=embed)
+
+@tree.command(name="alldelete", description="channelの会話を全て削除")
+async def alldelete(interaction: Interaction):
+  channel = interaction.channel
+  await channel.purge()
 client.run(TOKEN)
